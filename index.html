@@ -65,7 +65,7 @@
       </button>
       <button onclick="switchMainTab('quiz')" id="tabBtn-quiz" class="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 dark:text-slate-400 whitespace-nowrap transition flex items-center justify-center gap-1.5">
         <span>🔥 Hardcore Quiz (5 ช้อยส์)</span>
-        <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-rose-500 text-white font-bold" id="quizCountBadge">18 ข้อ</span>
+        <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-rose-500 text-white font-bold">18 ข้อ</span>
       </button>
     </div>
   </header>
@@ -75,14 +75,13 @@
 
     <!-- ==================== TAB 1: STUDY GUIDE ==================== -->
     <section id="tab-study" class="space-y-6">
-      <!-- Exam Overview Banner -->
       <div class="p-4 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-rose-500/10 border border-indigo-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="space-y-1">
           <div class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
             <span>📌 โพยโครงสร้างข้อสอบจากที่อาจารย์แจ้งในคลาส (Week 9)</span>
           </div>
           <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-            ข้อสอบแบ่งเป็น <b>ปรนัย (Multiple Choice / Multiple Select) 30 ข้อ</b> และ <b>ข้อสอบแล็บเขียนโค้ด 2 ข้อ</b> (ระดับความยากไปถึงระดับยากของระบบเซ็ตโปรแกรมมิ่ง) • ควิซในห้องเป็น <b>Closed Book</b> และมีทั้งข้อที่ถูกข้อเดียวและถูกหลายข้อ!
+            ข้อสอบแบ่งเป็น <b>ปรนัย (Multiple Choice / Multiple Select) 30 ข้อ</b> และ <b>ข้อสอบแล็บเขียนโค้ด 2 ข้อ</b> (ความยากไปถึงระดับยากของระบบเซ็ตโปรแกรมมิ่ง) • ควิซในห้องเป็น <b>Closed Book</b> มีทั้งข้อที่ถูกข้อเดียวและถูกหลายข้อ!
           </p>
         </div>
         <button onclick="switchMainTab('quiz')" class="shrink-0 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition">
@@ -126,11 +125,11 @@
         <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Week 5 • Practice 2</span>
-            <code class="text-xs text-slate-400">dataset + classList.replace</code>
+            <code class="text-xs text-slate-400">dataset + classList</code>
           </div>
           <h3 class="font-bold text-base">2. เปลี่ยนสีพื้นหลังและแสดงข้อความตรงกลาง</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400">
-            กดปุ่มสีแดง น้ำเงิน หรือเขียว แล้วดึงค่าจาก <code class="text-indigo-500">e.target.dataset.color</code> มาเปลี่ยนคลาสสีพื้นหลังและแสดงชื่อสีตรงกลางกล่อง
+            กดปุ่มสีแดง น้ำเงิน หรือเขียว แล้วดึงค่าจาก <code class="text-indigo-500">e.currentTarget.dataset.color</code> มาเปลี่ยนคลาสสีพื้นหลังและแสดงชื่อสีตรงกลางกล่อง
           </p>
           <div id="lab2Box" class="h-28 rounded-xl bg-slate-700 text-white flex items-center justify-center font-bold text-lg tracking-wide transition-all">
             กดปุ่มเลือกสีด้านล่าง
@@ -192,7 +191,6 @@
 
     <!-- ==================== TAB 3: HARDCORE QUIZ ==================== -->
     <section id="tab-quiz" class="hidden space-y-6">
-      <!-- Quiz Rules & Scoreboard -->
       <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -239,7 +237,17 @@
 
   <!-- ==================== APPLICATION DATA & LOGIC ==================== -->
   <script>
-    // 1. DATA: WEEK 4 - 9 STUDY SUMMARY (From Slides & Teacher's Transcript)
+    // Helper function to escape HTML tags inside Quiz Questions & Options
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // 1. DATA: WEEK 4 - 9 STUDY SUMMARY
     const weeksData = [
       {
         week: 4,
@@ -604,7 +612,7 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
           "B. หน้าจอ Console จะแสดงผลลัพธ์เป็น '2' เพียงตัวเดียวเท่านั้น",
           "C. '1' ไม่ถูกแสดงผลเพราะ fn1 ถูกแอดและถูกลบออกด้วย Function Reference ตัวเดียวกันเป๊ะ",
           "D. '3' ไม่ถูกแสดงผลเพราะคำสั่ง removeEventListener เขียน Arrow Function หน้าตาเหมือนกันทุกตัวอักษรแล้ว",
-          "E. यदिต้องการลบ fn2 ออกในภายหลัง สามารถเรียก btn.removeEventListener('click', fn2) ได้สำเร็จเพราะเก็บ Reference ไว้ในตัวแปร fn2 แล้ว"
+          "E. หากต้องการลบ fn2 ออกในภายหลัง สามารถเรียก btn.removeEventListener('click', fn2) ได้สำเร็จเพราะเก็บ Reference ไว้ในตัวแปร fn2 แล้ว"
         ],
         correct: [0, 2, 4],
         explanation: "อาจารย์เน้นมากใน Week 5: fn1 ถูกลบออกสำเร็จ (C ถูก) แต่ () => console.log('3') ที่เขียนสดใน addEventListener กับ removeEventListener เป็นคนละ Reference กัน จึงลบไม่ออก! ส่วน fn2 ถูกเก็บใส่ตัวแปรไว้จึงยังไม่ได้ถูกลบ ดังนั้นเมื่อคลิกจะแสดง '3' แล้วตามด้วย '2' ตามลำดับที่แอด (A ถูก, B และ D ผิด) และ fn2 สามารถลบผ่านตัวแปร fn2 ได้เพราะชี้ไปที่ Reference เดียวกัน (E ถูก)"
@@ -814,7 +822,6 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
     let gradedResults = {};  // { questionId: boolean (isPerfect) }
 
     function initApp() {
-      // Load saved theme
       const savedTheme = localStorage.getItem('sit_study_theme') || 'dark';
       setTheme(savedTheme);
 
@@ -895,7 +902,7 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
       const quotesHtml = data.teacherQuotes.map(q => `
         <li class="flex items-start gap-2 text-xs sm:text-sm text-amber-900 dark:text-amber-200/90">
           <span class="shrink-0 mt-0.5">🎙️</span>
-          <span>${q}</span>
+          <span>${escapeHtml(q)}</span>
         </li>
       `).join('');
 
@@ -903,13 +910,13 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
         <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
           <h3 class="font-bold text-base sm:text-lg text-indigo-600 dark:text-indigo-400">${sec.heading}</h3>
           <div class="text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-300">${sec.content}</div>
-          ${sec.code ? `<pre class="p-4 rounded-xl bg-slate-900 text-slate-100 text-xs overflow-x-auto leading-relaxed border border-slate-800"><code>${sec.code}</code></pre>` : ''}
+          ${sec.code ? `<pre class="p-4 rounded-xl bg-slate-900 text-slate-100 text-xs overflow-x-auto leading-relaxed border border-slate-800"><code>${escapeHtml(sec.code)}</code></pre>` : ''}
         </div>
       `).join('');
 
       container.innerHTML = `
         <div class="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2.5">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between gap-2">
             <h2 class="font-bold text-base sm:text-xl text-slate-900 dark:text-white">${data.title}</h2>
             <button onclick="jumpToWeekQuiz(${data.week})" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 transition shrink-0">
               ทำควิซ Week ${data.week} →
@@ -961,7 +968,7 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
     }
 
     function lab3ValidateForm(event) {
-      event.preventDefault(); // ยกเลิกการส่งฟอร์มไปเซิร์ฟเวอร์ตามที่อาจารย์สอน
+      event.preventDefault();
       const u = document.getElementById('lab3User').value.trim();
       const e = document.getElementById('lab3Email').value.trim();
       const p = document.getElementById('lab3Pass').value.trim();
@@ -995,10 +1002,10 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
       const result = found ? decodeURIComponent(found.substring(cookieName.length)) : undefined;
 
       out.innerHTML = `
-        <div><span class="text-slate-400">1. cookieName = </span><span class="text-amber-300">"${cookieName}"</span> <span class="text-slate-400">(length = ${cookieName.length})</span></div>
-        <div><span class="text-slate-400">2. split('; ') = </span><span class="text-indigo-300">${JSON.stringify(arr)}</span></div>
-        <div><span class="text-slate-400">3. find(startsWith) = </span><span class="text-purple-300">${found ? `"${found}"` : 'undefined'}</span></div>
-        <div><span class="text-slate-400">4. substring(${cookieName.length}) = </span><span class="font-bold ${result !== undefined ? 'text-emerald-400' : 'text-rose-400'}">${result !== undefined ? `"${result}"` : 'undefined (หาไม่เจอ)'}</span></div>
+        <div><span class="text-slate-400">1. cookieName = </span><span class="text-amber-300">"${escapeHtml(cookieName)}"</span> <span class="text-slate-400">(length = ${cookieName.length})</span></div>
+        <div><span class="text-slate-400">2. split('; ') = </span><span class="text-indigo-300">${escapeHtml(JSON.stringify(arr))}</span></div>
+        <div><span class="text-slate-400">3. find(startsWith) = </span><span class="text-purple-300">${found ? `"${escapeHtml(found)}"` : 'undefined'}</span></div>
+        <div><span class="text-slate-400">4. substring(${cookieName.length}) = </span><span class="font-bold ${result !== undefined ? 'text-emerald-400' : 'text-rose-400'}">${result !== undefined ? `"${escapeHtml(result)}"` : 'undefined (หาไม่เจอ)'}</span></div>
       `;
     }
 
@@ -1042,7 +1049,6 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
       } else {
         userSelections[qId].add(optIdx);
       }
-      // Clear graded state for this question when user changes selection
       delete gradedResults[qId];
       renderQuizQuestions();
       updateScoreDisplay();
@@ -1088,7 +1094,7 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
         ? quizQuestions
         : quizQuestions.filter(q => q.week === currentQuizFilter);
 
-      container.innerHTML = filtered.map((q, index) => {
+      container.innerHTML = filtered.map((q) => {
         const selectedSet = userSelections[q.id] || new Set();
         const isGraded = gradedResults.hasOwnProperty(q.id);
         const isPerfect = gradedResults[q.id] === true;
@@ -1098,31 +1104,38 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
           const isCorrectOption = q.correct.includes(optIdx);
 
           let rowStyle = "border-slate-200 dark:border-slate-800 hover:border-indigo-400 bg-slate-50/60 dark:bg-slate-800/40";
+          let boxStyle = "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900";
           let statusBadge = "";
 
           if (isChecked && !isGraded) {
             rowStyle = "border-indigo-500 bg-indigo-500/10 dark:bg-indigo-500/20";
+            boxStyle = "border-indigo-600 bg-indigo-600 text-white";
           } else if (isGraded) {
             if (isCorrectOption && isChecked) {
               rowStyle = "border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/20";
+              boxStyle = "border-emerald-600 bg-emerald-600 text-white";
               statusBadge = `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500 text-white shrink-0">✓ เลือกถูก</span>`;
             } else if (isCorrectOption && !isChecked) {
               rowStyle = "border-amber-500 bg-amber-500/10 dark:bg-amber-500/20";
+              boxStyle = "border-amber-500 bg-white dark:bg-slate-900";
               statusBadge = `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500 text-slate-950 shrink-0">! ลืมเลือกข้อนี้</span>`;
             } else if (!isCorrectOption && isChecked) {
               rowStyle = "border-rose-500 bg-rose-500/10 dark:bg-rose-500/20";
+              boxStyle = "border-rose-600 bg-rose-600 text-white";
               statusBadge = `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500 text-white shrink-0">✗ ตัวหลอก (ผิด)</span>`;
             }
           }
 
           return `
-            <label onclick="toggleOption(${q.id}, ${optIdx})" class="cursor-pointer p-3 rounded-xl border ${rowStyle} transition flex items-start justify-between gap-3 select-none">
-              <div class="flex items-start gap-2.5">
-                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation()" class="mt-1 w-4 h-4 rounded accent-indigo-600 pointer-events-none shrink-0" />
-                <span class="text-xs sm:text-sm leading-relaxed">${optText}</span>
+            <div onclick="toggleOption(${q.id}, ${optIdx})" role="checkbox" aria-checked="${isChecked}" class="cursor-pointer p-3.5 rounded-xl border ${rowStyle} transition flex items-start justify-between gap-3 select-none">
+              <div class="flex items-start gap-3">
+                <div class="mt-0.5 w-5 h-5 rounded-md border-2 ${boxStyle} flex items-center justify-center shrink-0 transition-colors">
+                  ${isChecked ? `<svg class="w-3.5 h-3.5 stroke-current" fill="none" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>` : ''}
+                </div>
+                <span class="text-xs sm:text-sm leading-relaxed">${escapeHtml(optText)}</span>
               </div>
               ${statusBadge}
-            </label>
+            </div>
           `;
         }).join('');
 
@@ -1136,12 +1149,12 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
               <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
                 ข้อที่ ${q.id} • Week ${q.week}
               </span>
-              <span class="text-[11px] font-medium text-slate-400">
+              <span class="text-[11px] font-semibold ${selectedSet.size > 0 ? 'text-indigo-500' : 'text-slate-400'}">
                 เลือกแล้ว ${selectedSet.size} ตัวเลือก (ต้องถูกครบ 100%)
               </span>
             </div>
 
-            <pre class="whitespace-pre-wrap font-sans font-semibold text-xs sm:text-sm leading-relaxed text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-800/70 p-3.5 rounded-xl border border-slate-200/70 dark:border-slate-700/70">${q.question}</pre>
+            <pre class="whitespace-pre-wrap font-sans font-semibold text-xs sm:text-sm leading-relaxed text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-800/70 p-3.5 rounded-xl border border-slate-200/70 dark:border-slate-700/70">${escapeHtml(q.question)}</pre>
 
             <div class="space-y-2">${optionsHtml}</div>
 
@@ -1163,7 +1176,7 @@ const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
               isGraded
                 ? `<div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-xs leading-relaxed space-y-1">
                      <div class="font-bold text-indigo-600 dark:text-indigo-400">💡 เฉลยละเอียด & จุดหลอกของอาจารย์:</div>
-                     <p class="text-slate-700 dark:text-slate-300">${q.explanation}</p>
+                     <p class="text-slate-700 dark:text-slate-300">${escapeHtml(q.explanation)}</p>
                    </div>`
                 : ''
             }
