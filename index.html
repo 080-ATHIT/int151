@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="th" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIT Client-Side JS | สรุปเข้ม Week 4-9 & Hardcore Quiz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Prompt', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-200 flex flex-col">
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-md shrink-0">
+          JS
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-sm sm:text-lg leading-tight text-slate-900 dark:text-white">
+              DOM, Events & Client Storage
+            </h1>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 font-semibold">
+              Week 4–9
+            </span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400">สรุปสไลด์ + สคริปต์คำพูดอาจารย์ & ควิซ 5 ตัวเลือก (ต้องถูก 100%)</p>
+        </div>
+      </div>
+
+      <button onclick="toggleTheme()" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5 text-xs font-semibold border border-slate-200 dark:border-slate-700">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText" class="hidden sm:inline">Dark Mode</span>
+      </button>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="max-w-6xl mx-auto px-4 flex border-t border-slate-100 dark:border-slate-800 overflow-x-auto no-scrollbar">
+      <button onclick="switchMainTab('study')" id="tabBtn-study" class="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 whitespace-nowrap transition">
+        📚 สรุปเนื้อหา Week 4–9
+      </button>
+      <button onclick="switchMainTab('lab')" id="tabBtn-lab" class="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 dark:text-slate-400 whitespace-nowrap transition">
+        🧪 ลองรัน Practice ในห้อง
+      </button>
+      <button onclick="switchMainTab('quiz')" id="tabBtn-quiz" class="flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 dark:text-slate-400 whitespace-nowrap transition flex items-center justify-center gap-1.5">
+        <span>🔥 Hardcore Quiz (5 ช้อยส์)</span>
+        <span class="px-1.5 py-0.5 text-[10px] rounded-full bg-rose-500 text-white font-bold" id="quizCountBadge">18 ข้อ</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-6xl w-full mx-auto px-4 py-6 flex-1">
+
+    <!-- ==================== TAB 1: STUDY GUIDE ==================== -->
+    <section id="tab-study" class="space-y-6">
+      <!-- Exam Overview Banner -->
+      <div class="p-4 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-rose-500/10 border border-indigo-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="space-y-1">
+          <div class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
+            <span>📌 โพยโครงสร้างข้อสอบจากที่อาจารย์แจ้งในคลาส (Week 9)</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            ข้อสอบแบ่งเป็น <b>ปรนัย (Multiple Choice / Multiple Select) 30 ข้อ</b> และ <b>ข้อสอบแล็บเขียนโค้ด 2 ข้อ</b> (ระดับความยากไปถึงระดับยากของระบบเซ็ตโปรแกรมมิ่ง) • ควิซในห้องเป็น <b>Closed Book</b> และมีทั้งข้อที่ถูกข้อเดียวและถูกหลายข้อ!
+          </p>
+        </div>
+        <button onclick="switchMainTab('quiz')" class="shrink-0 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition">
+          ไปทำข้อสอบจำลอง →
+        </button>
+      </div>
+
+      <!-- Week Selector Pills -->
+      <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1" id="weekPillsContainer"></div>
+
+      <!-- Week Content Display -->
+      <div id="weekContentContainer" class="space-y-5"></div>
+    </section>
+
+    <!-- ==================== TAB 2: INTERACTIVE LABS ==================== -->
+    <section id="tab-lab" class="hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Practice 1 (Week 5): classList Border -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Week 5 • Practice 1</span>
+            <code class="text-xs text-slate-400">classList.add / remove / toggle</code>
+          </div>
+          <h3 class="font-bold text-base">1. จัดการเส้นขอบด้วย <code class="text-indigo-500">classList</code></h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            ที่อาจารย์เดโมในห้อง: กดปุ่มเพิ่มขอบ ลบขอบ และสลับเส้นขอบ (Toggle: ถ้าไม่มีให้เอาเข้า ถ้ามีอยู่แล้วให้เอาออก)
+          </p>
+          <div id="lab1Box" class="h-28 rounded-xl bg-slate-100 dark:bg-slate-800 flex flex-col items-center justify-center transition-all duration-150">
+            <span class="text-sm font-semibold">กล่องทดสอบ #beefSoup</span>
+            <code id="lab1ClassStatus" class="text-[11px] text-indigo-500 mt-1">classList: []</code>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="lab1Action('add')" class="flex-1 py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">+ เพิ่มขอบ (add)</button>
+            <button onclick="lab1Action('remove')" class="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">- ลบขอบ (remove)</button>
+            <button onclick="lab1Action('toggle')" class="flex-1 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-semibold transition">⇄ สลับขอบ (toggle)</button>
+          </div>
+        </div>
+
+        <!-- Practice 2 (Week 5): Color Switcher -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">Week 5 • Practice 2</span>
+            <code class="text-xs text-slate-400">dataset + classList.replace</code>
+          </div>
+          <h3 class="font-bold text-base">2. เปลี่ยนสีพื้นหลังและแสดงข้อความตรงกลาง</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            กดปุ่มสีแดง น้ำเงิน หรือเขียว แล้วดึงค่าจาก <code class="text-indigo-500">e.target.dataset.color</code> มาเปลี่ยนคลาสสีพื้นหลังและแสดงชื่อสีตรงกลางกล่อง
+          </p>
+          <div id="lab2Box" class="h-28 rounded-xl bg-slate-700 text-white flex items-center justify-center font-bold text-lg tracking-wide transition-all">
+            กดปุ่มเลือกสีด้านล่าง
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <button data-color="RED" data-bg="bg-rose-600" onclick="lab2ChangeColor(event)" class="py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition">สีแดง (Red)</button>
+            <button data-color="BLUE" data-bg="bg-blue-600" onclick="lab2ChangeColor(event)" class="py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition">สีน้ำเงิน (Blue)</button>
+            <button data-color="GREEN" data-bg="bg-emerald-600" onclick="lab2ChangeColor(event)" class="py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition">สีเขียว (Green)</button>
+          </div>
+        </div>
+
+        <!-- Practice 3 (Week 6): Form Validation + preventDefault -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300">Week 6 • Practice 3</span>
+            <code class="text-xs text-slate-400">event.preventDefault()</code>
+          </div>
+          <h3 class="font-bold text-base">3. ตรวจสอบฟอร์ม (Form Validation)</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            โจทย์อาจารย์: ยกเลิกการส่งฟอร์มไปเซิร์ฟเวอร์ด้วย <code class="text-indigo-500">preventDefault()</code> แล้วเช็ค 2 เงื่อนไข: (1) ห้ามมีช่องใดว่าง และ (2) Password กับ Confirm ต้องตรงกัน
+          </p>
+          <form id="lab3Form" onsubmit="lab3ValidateForm(event)" class="space-y-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="lab3User" type="text" placeholder="Username" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+              <input id="lab3Email" type="email" placeholder="Email" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="lab3Pass" type="password" placeholder="Password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+              <input id="lab3Confirm" type="password" placeholder="Confirm Password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-indigo-500">
+            </div>
+            <button type="submit" class="w-full py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
+              Submit ทดสอบ (ดักจับด้วย 'submit' บน &lt;form&gt;)
+            </button>
+            <p id="lab3Msg" class="text-xs font-semibold min-h-[1.25rem]"></p>
+          </form>
+        </div>
+
+        <!-- Practice 4 (Week 8): CookieUtil.get() Step-by-Step Visualizer -->
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300">Week 8 • Cookie Dissection</span>
+            <code class="text-xs text-slate-400">split('; ') & substring()</code>
+          </div>
+          <h3 class="font-bold text-base">4. จำลองการแกะ String ของ <code class="text-indigo-500">CookieUtil.get()</code></h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            ไล่ดูทีละสเต็ปเหมือนที่อาจารย์ถามในห้องว่าทำไม <code class="text-indigo-500">cookieName.length</code> ถึงตัดตั้งแต่ตำแหน่งที่ 5 เป็นต้นไป
+          </p>
+          <div class="space-y-2">
+            <label class="text-[11px] text-slate-400 block">จำลองค่า <code>document.cookie</code>:</label>
+            <input id="lab4CookieRaw" type="text" value="mode=light; fontSize=14; user=Athit" oninput="runCookieVisualizer()" class="w-full px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <label class="text-[11px] text-slate-400 block">ชื่อคุกกี้ที่ต้องการค้นหา (<code>CookieUtil.get(name)</code>):</label>
+            <input id="lab4Key" type="text" value="mode" oninput="runCookieVisualizer()" class="w-full px-3 py-1.5 rounded-xl text-xs font-mono bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          </div>
+          <div id="lab4Output" class="p-3 rounded-xl bg-slate-900 text-slate-200 text-xs font-mono space-y-1 overflow-x-auto"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: HARDCORE QUIZ ==================== -->
+    <section id="tab-quiz" class="hidden space-y-6">
+      <!-- Quiz Rules & Scoreboard -->
+      <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 uppercase">
+              <span>⚠️ กติกา Hardcore Multiple Select (อิงเกณฑ์สอบจริงของอาจารย์)</span>
+            </div>
+            <h2 class="text-lg font-bold mt-0.5">ข้อสอบ 5 ตัวเลือก (A–E) • เลือกคำตอบที่ถูกต้องให้ครบทุกข้อ</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              ในแต่ละข้ออาจมีคำตอบที่ถูกตั้งแต่ <b>1 ถึง 5 ตัวเลือก</b> การจะได้คะแนนในข้อนั้น <b>ต้องเลือกข้อที่ถูกให้ครบ 100% และห้ามเลือกข้อที่ผิดแม้แต่ข้อเดียว</b> (ขาดหรือเกิน = 0 คะแนนทันที!)
+            </p>
+          </div>
+
+          <!-- Score Box -->
+          <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-800/80 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 shrink-0">
+            <div class="text-center px-2">
+              <div class="text-[11px] text-slate-400">คะแนนที่ได้ (100% Match)</div>
+              <div class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400" id="quizScoreDisplay">0 / 18</div>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <button onclick="gradeAllQuestions()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
+                ตรวจทุกข้อรวดเดียว
+              </button>
+              <button onclick="resetQuiz()" class="px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-xs font-semibold transition">
+                ล้างคำตอบเริ่มใหม่
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Quiz by Week -->
+        <div class="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-800" id="quizFilterContainer"></div>
+      </div>
+
+      <!-- Questions List -->
+      <div id="quizQuestionsContainer" class="space-y-5"></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 py-4 px-4 text-center text-xs text-slate-400 mt-10">
+    สร้างสำหรับทบทวนวิชา Client-Side Web Development (SIT KMUTT) • เนื้อหาครบทั้ง Week 4–9 พร้อมระบบควิซ Multiple Select 100%
+  </footer>
+
+  <!-- ==================== APPLICATION DATA & LOGIC ==================== -->
+  <script>
+    // 1. DATA: WEEK 4 - 9 STUDY SUMMARY (From Slides & Teacher's Transcript)
+    const weeksData = [
+      {
+        week: 4,
+        title: "Week 4: โครงสร้าง Node, dataset และการจัดการ classList",
+        badge: "ออกสอบทุกเมธอด!",
+        teacherQuotes: [
+          "“โทษที มันไม่ได้แอดสตริงเดียว มันต้อง 1 คลาส 1 สตริง ทุกคนนะ อาจารย์ใส่ผิด!” — ถ้าใส่ช่องว่างในสตริงเดียวกัน เช่น classList.add('text-xs font-bold') เบราว์เซอร์จะโยน DOMException (InvalidCharacterError) ทันที!",
+          "“ทำไมอาจารย์แนะนำ classList กับ dataset? เพราะถ้าไปจัดการตัดสตริง className เองต้องมานั่งนับความยาว substring ลำบากมาก ใช้ classList ดีกว่า และที่สอนวันนี้ออกข้อสอบหมดเลยนะคะ!”",
+          "“System Dialogs (alert, confirm, prompt) ไม่ได้ออกข้อสอบ และไม่ได้สำคัญมาก”"
+        ],
+        sections: [
+          {
+            heading: "1. ทบทวนโครงสร้าง Node & การเข้าถึงโหนดลูก (childNodes vs children)",
+            content: `เวลาเราคิวรี่โหนดออกมาแล้วต้องการวนลูปดูโหนดลูก อาจารย์ย้ำความต่างของ 2 พร็อพเพอร์ตี้นี้ไว้ชัดเจนมาก:
+            <ul class="list-disc pl-5 mt-2 space-y-1">
+              <li><code>node.childNodes</code> : คืนค่าเป็น <b>NodeList (Live)</b> ที่เก็บโหนดลูก <b>ทุกชนิดของ Node Type</b> (รวม Text node ที่เป็นช่องว่าง/การขึ้นบรรทัดใหม่ <code>\\n</code> และ Comment node ด้วย)</li>
+              <li><code>element.children</code> : คืนค่าเป็น <b>HTMLCollection (Live)</b> ที่เก็บเฉพาะโหนดลูกที่เป็น <b>Element node เท่านั้น</b> (ไม่เอา Text/Comment)</li>
+            </ul>`
+          },
+          {
+            heading: "2. การใช้งาน dataset (Custom Data Attributes)",
+            content: `แอตทริบิวต์ที่ขึ้นต้นด้วย <code>data-*</code> ใน HTML จะถูกแปลงชื่อจาก <b>kebab-case</b> เป็น <b>camelCase</b> ในออบเจ็กต์ <code>element.dataset</code> อัตโนมัติ`,
+            code: `// HTML: <div id="soup" data-meat-type="premium-beef" data-price="120"></div>
+const soup = document.querySelector('#soup');
+console.log(soup.dataset.meatType); // "premium-beef" (ได้ค่าเป็น String เสมอ!)
+console.log(soup.dataset.price);    // "120" (ไม่ใช่ Number 120)
+soup.dataset.spicyLevel = 'hot';    // สร้างแอตทริบิวต์ data-spicy-level="hot" ให้ทันที`
+          },
+          {
+            heading: "3. การจัดการคลาสด้วย element.classList (พระเอกของ Week 4)",
+            content: `<code>classList</code> คืนค่าเป็นออบเจ็กต์ชนิด <b>DOMTokenList</b> ซึ่งมีพร็อพเพอร์ตี้ <code>.length</code> และสามารถใช้ลูป <code>for...of</code> วนอ่านค่าแต่ละคลาสออกมาได้โดยตรง:`,
+            code: `const beefSoup = document.querySelector('#beef-soup');
+
+// 1. add(c1, c2, ...) : เพิ่มได้ตั้งแต่ 1 คลาสขึ้นไป (ต้อง 1 คลาส 1 สตริง ห้ามมีเว้นวรรค!)
+beefSoup.classList.add('text-gray-600', 'font-semibold', 'text-xs');
+
+// 2. toggle(className) : สวิตช์ On/Off (ถ้าไม่มี -> เอาเข้าและคืนค่า true | ถ้ามีอยู่แล้ว -> เอาออกและคืนค่า false)
+beefSoup.classList.toggle('text-xs'); // ตอนนี้มีอยู่ -> ลบออก (return false)
+beefSoup.classList.toggle('text-xs'); // ตอนนี้ไม่มีแล้ว -> เพิ่มกลับเข้าไป (return true)
+
+// 3. remove(c1, c2, ...) : ลบได้หลายคลาสพร้อมกัน (1 คลาส 1 สตริงเหมือน add)
+beefSoup.classList.remove('text-xs', 'font-semibold');
+
+// 4. contains(className) : เช็คว่ามีคลาสนี้อยู่หรือไม่ (คืนค่าเป็น Boolean true / false)
+console.log(beefSoup.classList.contains('meat')); // true (ถ้าลบไปแล้วจะได้ false)
+
+// 5. replace(oldToken, newToken) : แทนที่คลาสเดิมด้วยคลาสใหม่ (ห้ามมีช่องว่างในชื่อคลาส!)
+beefSoup.classList.replace('meat', 'premium-meat');
+
+// 6. การอ่านจำนวนคลาส (.length) และการวนลูปอ่านค่าด้วย for...of
+console.log(beefSoup.classList.length); // เช่น 2
+for (const cls of beefSoup.classList) {
+  console.log(cls); // พิมพ์ชื่อแต่ละคลาสออกมาทีละตัว
+}`
+          }
+        ]
+      },
+      {
+        week: 5,
+        title: "Week 5: การผูกหลาย Event Listeners และกฎเหล็กของ removeEventListener",
+        badge: "จุดหลอก Arrow Function!",
+        teacherQuotes: [
+          "“จะลบ Event Listener ได้ เฉพาะฟังก์ชันแฮนด์เลอร์ที่อ้างผ่านชื่อฟังก์ชัน (Named Function) เท่านั้นนะคะ! ถ้าเราใส่ Arrow Function หรือ Anonymous Function ลบไม่ได้นะคะ เพราะมันเป็นคนละ Reference กันแล้ว!”",
+          "“เวลาเราจะ remove เราต้องเขียน 3 พารามิเตอร์ให้ตรงกับตอน add ด้วย ถ้าพารามิเตอร์ตัวที่ 3 ตอนแอดเป็น true ตอน remove ก็ต้องใส่ true ถึงจะลบออก”",
+          "“ออบเจ็กต์เดียวกันแอดได้หลายฟังก์ชัน และจะทำงานเรียงตามลำดับการแอด”"
+        ],
+        sections: [
+          {
+            heading: "1. การแอดหลาย Event Handler บน Element เดียวกัน",
+            content: `เมื่อใช้ <code>addEventListener</code> ผูกเหตุการณ์ชนิดเดียวกัน (เช่น <code>'click'</code>) หลายตัวเข้ากับออบเจ็กต์เดียวกัน <b>ทุกฟังก์ชันจะทำงานทั้งหมด โดยเรียงลำดับตามที่ถูกสั่งแอดก่อน-หลัง</b> (ไม่ทับกันเหมือนการกำหนดผ่าน DOM0 property เช่น <code>btn.onclick = ...</code>)`
+          },
+          {
+            heading: "2. กฎเหล็กการลบด้วย removeEventListener (ออกสอบชัวร์ 100%)",
+            content: `การจะเรียก <code>target.removeEventListener(type, listener, useCapture)</code> ให้สำเร็จ ต้องผ่านเงื่อนไขครบทุกข้อดังนี้:
+            <ul class="list-disc pl-5 mt-2 space-y-1">
+              <li><b>ต้องอ้างอิง Reference ของฟังก์ชันตัวเดียวกันเป๊ะ:</b> ต้องสร้างเป็นฟังก์ชันที่มีชื่อหรือเก็บใส่ตัวแปรไว้ก่อนแล้วส่งชื่อนั้นทั้งตอน <code>add</code> และ <code>remove</code></li>
+              <li><b>ห้ามใช้ Arrow Function <code>() => {}</code> หรือ Anonymous Function <code>function() {}</code> เขียนสดในพารามิเตอร์:</b> แม้โค้ดข้างในจะเหมือนกันทุกตัวอักษร แต่ JavaScript จะถือว่าเป็นการจอง Memory Reference ใหม่คนละตัว ทำให้ลบไม่ออก!</li>
+              <li><b>พารามิเตอร์ตัวที่ 3 (useCapture / options) ต้องตรงกัน:</b> ถ้าตอนแอดใส่ <code>true</code> (Capturing phase) ตอนลบก็ต้องใส่ <code>true</code> หากไม่ใส่ (มีค่าปริยายเป็น <code>false</code>) จะลบไม่ออก!</li>
+            </ul>`,
+            code: `const btn = document.querySelector('#okBtn');
+
+// ❌ แบบที่ลบไม่ออกเด็ดขาด (Arrow Function คนละ Reference)
+btn.addEventListener('click', () => console.log('3'));
+btn.removeEventListener('click', () => console.log('3')); // ไม่เวิร์ค! กดปุ่มแล้วยังพิมพ์ '3' อยู่
+
+// ✅ แบบที่ลบออกได้จริง (ใช้ Named Function อ้างอิง Reference เดียวกัน)
+function handleOne() {
+  console.log('1');
+}
+btn.addEventListener('click', handleOne, false);
+btn.removeEventListener('click', handleOne, false); // ลบสำเร็จ! '1' จะถูกข้ามไปเลย`
+          },
+          {
+            heading: "3. สรุปแนวคิดแบบฝึกหัดท้ายคาบ (Practice 1 & Practice 2)",
+            content: `<ul class="list-disc pl-5 space-y-1">
+              <li><b>Practice 1 (สลับเส้นขอบ):</b> ผูก <code>click</code> กับปุ่ม Add, Remove, Toggle เพื่อเรียก <code>box.classList.add('border-class')</code>, <code>.remove(...)</code>, และ <code>.toggle(...)</code></li>
+              <li><b>Practice 2 (ปุ่ม 3 สี Red / Blue / Green):</b> เมื่อกดปุ่มสีใด ให้เปลี่ยนคลาสสีพื้นหลังของกล่องและนำข้อความชื่อสีไปแสดงตรงกลางกล่อง (สามารถลองกดเล่นได้ที่แท็บ <b>🧪 ลองรัน Practice ในห้อง</b> ด้านบน)</li>
+            </ul>`
+          }
+        ]
+      },
+      {
+        week: 6,
+        title: "Week 6: Event Object, preventDefault() และการดักจับ Form Submit",
+        badge: "ระวังสับสน click กับ submit!",
+        teacherQuotes: [
+          "“นักศึกษาจะสับสนตลอดเวลาอาจารย์สอนเรื่อง preventDefault()... การยกเลิกพฤติกรรมตั้งต้นของ Browser ไม่ได้แปลว่ายกเลิกการทำงานของ Event Listener ที่เราเขียนนะ! โค้ดใน Listener ของอาจารย์ยังทำงานปกติ!”",
+          "“เมื่อวานที่เกิดปัญหาคือ ปุ่ม OK นักศึกษาไปเขียน addEventListener('submit') ส่วนตรง <form> นักศึกษาไปใส่ 'click' มันสลับกันนะ! ถ้าดักที่ปุ่มต้องใช้ 'click' ถ้าดักที่ฟอร์มต้องใช้ 'submit'”"
+        ],
+        sections: [
+          {
+            heading: "1. พระเอกของบท: Event Object",
+            content: `เมื่อเกิดเหตุการณ์ขึ้น Browser จะสร้าง <b>Event Object</b> ที่บรรจุข้อมูลทั้งหมดของเหตุการณ์นั้น (เกิดอะไรขึ้น เกิดที่ไหน) แล้วส่งเข้ามาเป็น <b>พารามิเตอร์ตัวแรกของฟังก์ชัน Event Handler</b> ให้โดยอัตโนมัติ`
+          },
+          {
+            heading: "2. เจาะลึก event.preventDefault() (จุดที่ชอบออกข้อสอบหลอก)",
+            content: `<code>event.preventDefault()</code> ทำหน้าที่ <b>ยกเลิกพฤติกรรมตั้งต้น (Default Behavior) ที่มากับ Browser</b> เช่น:
+            <ul class="list-disc pl-5 mt-2 space-y-1">
+              <li>ใช้กับแท็ก <code>&lt;a href="..."&gt;</code> : ยกเลิกการกระโดดเปิดหน้าเว็บตามลิงก์ <b>แต่คำสั่ง <code>console.log()</code> หรือโค้ดอื่นๆ ที่อยู่ใน Event Listener ของเรายังคงรันจนจบเหมือนเดิม!</b></li>
+              <li>ใช้กับ <code>&lt;form&gt;</code> หรือปุ่มในฟอร์ม : ยกเลิกการส่ง Request ไปหา Server ทันที เพื่อให้ฝั่ง Client ตรวจสอบข้อมูล (Validate Form Data) ให้ผ่านเสียก่อน</li>
+            </ul>`
+          },
+          {
+            heading: "3. 2 วิธีในการดักจับและบล็อกการส่ง Form (ห้ามสลับกันเด็ดขาด!)",
+            content: `อาจารย์เขียนเปรียบเทียบให้ดูในคลาส 2 วิธี และย้ำว่าห้ามสลับชนิดของ Event:`,
+            code: `// วิธีที่ 1: ดักที่ปุ่ม <button> -> ต้องใช้ Event ชนิด 'click' เท่านั้น!
+const okButton = document.querySelector('button');
+okButton.addEventListener('click', (event) => {
+  event.preventDefault(); // ไม่ให้ปุ่มในฟอร์มสั่งรีเฟรชหน้าส่งไปเซิร์ฟเวอร์
+  // เขียนโค้ด Validate ข้อมูลตรงนี้...
+});
+
+// วิธีที่ 2: ดักที่แท็ก <form> -> ต้องใช้ Event ชนิด 'submit' เท่านั้น!
+const formElement = document.querySelector('form');
+formElement.addEventListener('submit', (event) => {
+  event.preventDefault(); // บล็อกการ submit ไปเซิร์ฟเวอร์
+  // เขียนโค้ด Validate ข้อมูลตรงนี้...
+});`
+          },
+          {
+            heading: "4. แนวคิด Practice 3 (Form Validation)",
+            content: `ตรวจสอบ 2 เงื่อนไขหลัก:
+            <ol class="list-decimal pl-5 mt-1 space-y-1">
+              <li>ทุกฟิลด์ (Username, Email, Password, Confirm Password) <b>ห้ามว่าง (Empty)</b> เช่น เช็คด้วย <code>value.trim() === ''</code></li>
+              <li>ค่าของ <b>Password และ Confirm Password ต้องตรงกันเป๊ะ (Match)</b></li>
+              <li>หากไม่ผ่านเงื่อนไขใดให้แสดงข้อความสีแดงด้านล่าง แต่ถ้าผ่านครบให้แสดงข้อความสีเขียว</li>
+            </ol>`
+          }
+        ]
+      },
+      {
+        week: 7,
+        title: "Week 7: Event Flow (Capturing vs Bubbling), target vs currentTarget & โจทย์ระบบ",
+        badge: "ข้อสอบไปถึงระดับยาก!",
+        teacherQuotes: [
+          "“นักศึกษากลับไปทำข้อกลางกับข้อยากด้วยนะคะ ข้อสอบแล็บไปถึงข้อยากนะ อาจารย์ต้องบอกแบบนี้เลย!”",
+          "“เวลาสอบควิซ มีทั้งข้อที่มีคำตอบเดียวถูก (Single Correct) และหลายคำตอบถูก (Multiple Correct) ให้เลือกให้ครบนะคะ”"
+        ],
+        sections: [
+          {
+            heading: "1. ลำดับการเดินทางของเหตุการณ์ (Event Flow: Capturing vs Bubbling)",
+            content: `เมื่อเกิดอีเวนต์บน Element ที่ซ้อนกันอยู่ จะมีทิศทางการวิ่งของอีเวนต์ 2 เฟสหลัก:
+            <ul class="list-disc pl-5 mt-2 space-y-1">
+              <li><b>Event Capturing (Trickling Down) — พารามิเตอร์ตัวที่ 3 เป็น <code>true</code>:</b> อีเวนต์วิ่งจากโหนดนอกสุด (<code>window</code> → <code>document</code> → <code>html</code> → <code>body</code> → แม่) ลงมายังโหนดเป้าหมายที่ถูกคลิก</li>
+              <li><b>Event Bubbling (Bubbling Up) — พารามิเตอร์ตัวที่ 3 เป็น <code>false</code> (ค่า Default):</b> อีเวนต์วิ่งจากโหนดเป้าหมายที่ถูกคลิก ย้อนกลับขึ้นไปหาโหนดแม่ (<code>parent</code> → <code>body</code> → <code>html</code> → <code>document</code> → <code>window</code>)</li>
+              <li><b><code>event.stopPropagation()</code>:</b> หยุดการส่งต่ออีเวนต์ไปยังโหนดลำดับถัดไป (ไม่ให้ไหลต่อทั้งขาลงและขาขึ้น) แต่ไม่ยกเลิกพฤติกรรมเริ่มต้นของ Browser (ถ้าจะยกเลิกพฤติกรรมเริ่มต้นต้องใช้ <code>preventDefault()</code>)</li>
+            </ul>`
+          },
+          {
+            heading: "2. ความแตกต่างระหว่าง event.target กับ event.currentTarget",
+            content: `จุดหลอกยอดฮิตเวลาทำ Event Delegation (ผูกอีเวนต์ไว้ที่แท็กแม่ แล้วคลิกที่แท็กลูก):`,
+            code: `// สมมติผูกคลิกไว้ที่ <ul id="menu"> แล้วผู้ใช้เอาเมาส์ไปคลิกที่ <li class="item">ชาเขียว</li>
+const menu = document.querySelector('#menu');
+menu.addEventListener('click', (e) => {
+  console.log(e.target);        // <li>ชาเขียว</li> (ตัวต้นเหตุที่ถูกคลิกจริงๆ!)
+  console.log(e.currentTarget); // <ul id="menu">   (ตัวที่เราเขียน .addEventListener เกาะไว้เสมอ!)
+  console.log(e.type);          // "click" (ชื่อชนิดของอีเวนต์)
+});`
+          }
+        ]
+      },
+      {
+        week: 8,
+        title: "Week 8: Client-Side Storage & การผ่าตัดโค้ด CookieUtil ทีละบรรทัด",
+        badge: "อาจารย์ไล่ถามทีละบรรทัด!",
+        teacherQuotes: [
+          "“ในเมธอด unset ที่เรียก set แล้วส่งค่าเป็น empty string กับ new Date(0) นักศึกษาสงสัยไหมแปลว่าอะไร? ศูนย์มิลลิวินาทีมันแทนวันที่ 1 มกราคม 1970 (อดีต) แปลว่าอาจารย์จงใจทำให้คุกกี้มันหมดอายุไปเลย!”",
+          "“ทำไมต้องใช้เมธอด get ที่เราสร้างขึ้นเอง? เพราะ document.cookie ไม่มีฟังก์ชัน get ให้ใช้ มันคืนค่ามาเป็นสตริงก้อนยาวๆ คั่นด้วย semicolon และเว้นวรรค (; ) เราเลยต้อง split แล้วหาด้วย startsWith แล้วตัด substring ออกมา!”"
+        ],
+        sections: [
+          {
+            heading: "1. พฤติกรรมของ document.cookie ที่ต้องระวัง",
+            content: `<ul class="list-disc pl-5 space-y-1">
+              <li>เวลาอ่านค่า <code>document.cookie</code> จะได้สตริงรวมของทุกคุกกี้ในรูปแบบ <code>"mode=light; fontSize=14"</code> (สังเกตว่าคั่นด้วย <b>เซมิโคลอนตามด้วยช่องว่าง 1 เคาะ <code>"; "</code></b> และไม่ได้แสดงวันหมดอายุออกมาตอนอ่านค่า)</li>
+              <li>เวลาสั่งกำหนดค่า <code>document.cookie = "mode=dark"</code> จะเป็นการ <b>เพิ่มหรืออัปเดตเฉพาะคุกกี้ชื่อ <code>mode</code> เท่านั้น</b> (ไม่ได้ลบคุกกี้ตัวอื่นที่มีอยู่เดิมทิ้ง!)</li>
+              <li>คุกกี้จะถูกแนบไปกับ <b>ทุกๆ HTTP Request</b> ที่ส่งไปยังเซิร์ฟเวอร์อัตโนมัติ และมีขนาดจำกัดเพียงประมาณ <b>4 KB</b></li>
+            </ul>`
+          },
+          {
+            heading: "2. ผ่าตัดโค้ด CookieUtil (get, set, unset) แบบละเอียดตามที่อาจารย์ไล่ในห้อง",
+            content: `อาจารย์เน้นให้เข้าใจการทำงานทุกบรรทัดของ <code>CookieUtil</code> โดยเฉพาะการนับตำแหน่งใน <code>get()</code> และการส่ง <code>new Date(0)</code> ใน <code>unset()</code>:`,
+            code: `class CookieUtil {
+  static get(name) {
+    // 1. เข้ารหัสชื่อคุกกี้และต่อท้ายด้วย "=" เช่น ถ้าหา "mode" จะได้ cookieName = "mode=" (ความยาว length = 5)
+    let cookieName = \`\${encodeURIComponent(name)}=\`;
+    
+    // 2. แยกสตริง document.cookie ด้วย "; " (ต้องมีเว้นวรรคหลังเซมิโคลอน!) ออกมาเป็น Array
+    // เช่น "mode=light; fontSize=14" -> ["mode=light", "fontSize=14"]
+    let cookieArr = document.cookie.split('; ');
+    
+    // 3. ใช้ .find() ค้นหาไอเทมใน Array ที่ขึ้นต้นด้วย "mode="
+    let foundCookie = cookieArr.find(c => c.startsWith(cookieName));
+    
+    // 4. ถ้าเจอ เช่น "mode=light" ให้ตัด substring ตั้งแต่ตำแหน่ง cookieName.length (คือตำแหน่งที่ 5 เป็นต้นไป)
+    // นับ Index: m(0) o(1) d(2) e(3) =(4) l(5) i(6) g(7) h(8) t(9) -> เริ่มตัดตั้งแต่ตัว 'l' ได้คำว่า "light" พอดี!
+    if (foundCookie) {
+      return decodeURIComponent(foundCookie.substring(cookieName.length));
+    }
+    return undefined; // หรือ null ตามที่นิยามไว้ในคลาสเมื่อหาไม่เจอ
+  }
+
+  static set(name, value, expires) {
+    // ตอน set สั่ง encodeURIComponent ทั้งชื่อและค่า ดังนั้นตอน get จึงต้อง decodeURIComponent ด้วย!
+    let cookieText = \`\${encodeURIComponent(name)}=\${encodeURIComponent(value)}\`;
+    if (expires instanceof Date) {
+      cookieText += \`; expires=\${expires.toUTCString()}\`;
+    }
+    document.cookie = cookieText;
+  }
+
+  static unset(name) {
+    // ส่งค่าว่าง '' และตั้งวันหมดอายุเป็น new Date(0) คือ 0 มิลลิวินาที (1 ม.ค. 1970 = อดีต)
+    // เพื่อบังคับให้คุกกี้หมดอายุและถูกลบออกจาก Browser ทันที!
+    CookieUtil.set(name, '', new Date(0));
+  }
+}`
+          }
+        ]
+      },
+      {
+        week: 9,
+        title: "Week 9: Web Storage (localStorage vs sessionStorage) & แนวทางสอบไฟนอล",
+        badge: "ช้อยส์ 30 ข้อ + แล็บ 2 ข้อ",
+        teacherQuotes: [
+          "“มีข้อสอบแล็บอยู่ 2 ข้อ มีช้อยส์อยู่ 30 ข้อนะคะ การสอบเหมือน Exam 1 เลย ไปเน้นทำแบบฝึกหัดเยอะๆ ที่พี่เต้ยเตรียมไว้ให้ประมาณ 100–150 ข้อ”",
+          "“อาจารย์ให้ใช้ AI ได้นะ แต่ถามในเชิงความรู้ เราไม่เข้าใจคำสั่งไหน ถามให้มันอธิบายเหมือนมีอาจารย์อยู่ใกล้ๆ อย่าให้ AI เจน Solution มาส่ง เพราะต่อไปข้างนอกเราต้องทำหน้าที่ Review โค้ดของ AI!”"
+        ],
+        sections: [
+          {
+            heading: "1. เปรียบเทียบ Cookie vs localStorage vs sessionStorage",
+            content: `<div class="overflow-x-auto mt-2">
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-400">
+                    <th class="py-2 pr-3">คุณสมบัติ</th>
+                    <th class="py-2 px-3">Cookie</th>
+                    <th class="py-2 px-3">localStorage</th>
+                    <th class="py-2 pl-3">sessionStorage</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                  <tr>
+                    <td class="py-2 pr-3 font-semibold">อายุข้อมูล (Lifespan)</td>
+                    <td class="py-2 px-3">ตาม <code>expires</code> / <code>max-age</code> (ถ้าไม่ตั้ง = Session cookie หายเมื่อปิดเบราว์เซอร์)</td>
+                    <td class="py-2 px-3 text-emerald-500 font-semibold">อยู่ถาวร (Persistent) แม้ปิดแท็บ/ปิดเครื่อง จนกว่าจะสั่งลบเอง</td>
+                    <td class="py-2 pl-3 text-amber-500 font-semibold">อยู่เฉพาะแท็บนั้น (หายทันทีเมื่อปิดแท็บ หรือปิดเบราว์เซอร์ แต่กด Refresh ยังอยู่!)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-semibold">การแชร์ระหว่างแท็บ</td>
+                    <td class="py-2 px-3">แชร์ทุกแท็บใน Origin เดียวกัน</td>
+                    <td class="py-2 px-3">แชร์ทุกแท็บ/หน้าต่างใน Origin เดียวกัน</td>
+                    <td class="py-2 pl-3"><b>ไม่แชร์ข้ามแท็บ!</b> เปิดแท็บใหม่แม้ URL เดียวกันก็แยกกันคนละก้อน</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-semibold">ส่งไปกับ HTTP Request</td>
+                    <td class="py-2 px-3 text-rose-500 font-semibold">ส่งไปกับทุก Request อัตโนมัติ</td>
+                    <td class="py-2 px-3">ไม่ส่ง (อยู่แค่ฝั่ง Client เท่านั้น)</td>
+                    <td class="py-2 pl-3">ไม่ส่ง (อยู่แค่ฝั่ง Client เท่านั้น)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-3 font-semibold">ความจุโดยประมาณ</td>
+                    <td class="py-2 px-3">~4 KB</td>
+                    <td class="py-2 px-3">~5 MB ต่อ Origin</td>
+                    <td class="py-2 pl-3">~5 MB ต่อ Origin</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>`
+          },
+          {
+            heading: "2. เมธอดของ Web Storage และการเก็บ Object / Array ด้วย JSON",
+            content: `ทั้ง <code>localStorage</code> และ <code>sessionStorage</code> <b>เก็บค่า Value เป็นชนิด String เท่านั้น!</b> หากส่ง Object หรือ Array เข้าไปตรงๆ โดยไม่แปลงเป็น JSON ก่อน ค่าจะถูกแปลงเป็นสตริงขยะ <code>"[object Object]"</code> ทันที!`,
+            code: `// เมธอดหลัก 4 ตัวของ Web Storage
+localStorage.setItem('theme', 'dark');           // 1. บันทึกค่า
+const theme = localStorage.getItem('theme');     // 2. อ่านค่า (ถ้าไม่มีคีย์นี้ จะได้ค่าเป็น null!)
+localStorage.removeItem('theme');                // 3. ลบเฉพาะคีย์ที่ระบุ
+localStorage.clear();                            // 4. ล้างข้อมูลทั้งหมดใน Origin นั้น
+
+// ⚠️ การเก็บ Object หรือ Array ต้องใช้ JSON.stringify() และ JSON.parse() เสมอ!
+const cart = [{ id: 101, name: 'Beef Soup', qty: 2 }];
+
+// ตอนเก็บ: แปลง Object/Array -> JSON String
+localStorage.setItem('myCart', JSON.stringify(cart));
+
+// ตอนดึงกลับมาใช้: แปลง JSON String -> Object/Array (ควรเช็คก่อนเผื่อเป็น null)
+const savedCart = JSON.parse(localStorage.getItem('myCart')) || [];`
+          }
+        ]
+      }
+    ];
+
+    // 2. DATA: HARDCORE 5-OPTION MULTIPLE-SELECT QUIZ (18 Deep Questions)
+    const quizQuestions = [
+      {
+        id: 1,
+        week: 4,
+        question: "กำหนดให้มี <div id=\"soup\" class=\"meat hot\" data-food-price=\"150\"></div> ข้อใดกล่าวถูกต้องเกี่ยวกับการจัดการ dataset และ classList บนโหนดนี้? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. คำสั่ง soup.dataset.foodPrice === 150 จะคืนค่าเป็น true",
+          "B. คำสั่ง soup.classList.add('text-xs font-bold') จะทำงานสำเร็จและเพิ่มทั้ง 2 คลาสเข้าไปพร้อมกัน",
+          "C. คำสั่ง soup.classList.add('text-xs', 'font-bold') จะเพิ่มทั้ง 2 คลาสเข้าไปโดยไม่เกิด Error",
+          "D. คำสั่ง soup.dataset['food-price'] เป็นวิธีมาตรฐานในการเข้าถึงค่า \"150\" จากออบเจ็กต์ dataset",
+          "E. ค่าของ soup.dataset.foodPrice มีชนิดข้อมูลเป็น String คือ \"150\" เสมอ"
+        ],
+        correct: [2, 4],
+        explanation: "A ผิด เพราะ dataset เก็บค่าเป็น String (\"150\" === 150 ได้ false) | B ผิด เพราะอาจารย์ย้ำในห้องว่า classList.add ห้ามมีช่องว่างในสตริงเดียว ต้องแยกเป็น 1 คลาส 1 สตริง (โยน InvalidCharacterError) | C ถูก | D ผิด เพราะใน dataset ชื่อแอตทริบิวต์ถูกแปลงเป็น camelCase คือ dataset.foodPrice หรือ dataset['foodPrice'] แล้ว | E ถูก"
+      },
+      {
+        id: 2,
+        week: 4,
+        question: "เริ่มต้น <p id=\"msg\" class=\"a b\"></p> เมื่อรันโค้ดต่อไปนี้ตามลำดับ:\nconst el = document.querySelector('#msg');\nconst r1 = el.classList.toggle('b');\nconst r2 = el.classList.toggle('c');\nconst r3 = el.classList.contains('b');\nข้อใดถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ค่าของ r1 คือ false เพราะคลาส 'b' มีอยู่แล้วจึงถูกเอาออก",
+          "B. ค่าของ r2 คือ true เพราะคลาส 'c' ยังไม่มีอยู่จึงถูกเพิ่มเข้าไป",
+          "C. ค่าของ r3 คือ false",
+          "D. เมื่อจบการทำงาน ค่าของ el.classList.length มีค่าเท่ากับ 3",
+          "E. เราสามารถใช้ลูป for (const item of el.classList) เพื่อวนปริ้นชื่อคลาส 'a' และ 'c' ออกมาได้"
+        ],
+        correct: [0, 1, 2, 4],
+        explanation: "เริ่มต้นมี ['a', 'b'] -> toggle('b') เอา 'b' ออกและคืนค่า false (A ถูก) -> toggle('c') เอา 'c' เข้าและคืนค่า true (B ถูก) -> contains('b') จึงได้ false (C ถูก) -> เหลือคลาส ['a', 'c'] ดังนั้น length จึงเท่ากับ 2 ไม่ใช่ 3 (D ผิด) -> classList รองรับ for...of ได้ตามที่อาจารย์สอน (E ถูก)"
+      },
+      {
+        id: 3,
+        week: 4,
+        question: "ข้อใดอธิบายความแตกต่างระหว่าง node.childNodes และ element.children รวมถึงเมธอด classList.replace() ได้ถูกต้องตามที่อาจารย์สอน? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. childNodes จะดึงโหนดลูกทุกชนิดของ Node Type รวมถึง Text node ที่เป็นช่องว่างและการขึ้นบรรทัดใหม่ด้วย",
+          "B. children จะดึงเฉพาะโหนดลูกที่เป็น Element node เท่านั้น",
+          "C. el.classList.replace('meat', 'premium meat') สามารถทำงานได้ปกติและแทนที่ด้วย 2 คลาสใหม่",
+          "D. el.classList.replace('meat', 'premium-meat') จะเปลี่ยนคลาส 'meat' เป็น 'premium-meat' โดยห้ามมีเว้นวรรคในชื่อคลาส",
+          "E. ทั้ง childNodes และ children จะคืนค่าเป็น Array แท้ๆ ที่สามารถเรียกใช้ .find() ได้โดยตรงโดยไม่ต้องแปลง"
+        ],
+        correct: [0, 1, 3],
+        explanation: "A และ B ถูกตามที่อาจารย์ทวนต้นคาบ Week 4 | C ผิด เพราะอาจารย์ย้ำตอนทำเคส 'premium-meat' ในห้องว่าใน replace ห้ามมีช่องว่างเด็ดขาด! | D ถูก | E ผิด เพราะ childNodes คือ NodeList และ children คือ HTMLCollection ไม่ใช่ Array แท้ จึงไม่มีเมธอด .find() ให้เรียกตรงๆ"
+      },
+      {
+        id: 4,
+        week: 5,
+        question: "พิจารณาโค้ดต่อไปนี้:\nconst btn = document.querySelector('#btn');\nfunction fn1() { console.log('1'); }\nconst fn2 = () => console.log('2');\nbtn.addEventListener('click', fn1);\nbtn.addEventListener('click', () => console.log('3'));\nbtn.addEventListener('click', fn2);\nbtn.removeEventListener('click', fn1);\nbtn.removeEventListener('click', () => console.log('3'));\nเมื่อผู้ใช้คลิกปุ่ม #btn 1 ครั้ง ข้อใดถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. หน้าจอ Console จะแสดงผลลัพธ์เป็น '3' ตามด้วย '2' ตามลำดับ",
+          "B. หน้าจอ Console จะแสดงผลลัพธ์เป็น '2' เพียงตัวเดียวเท่านั้น",
+          "C. '1' ไม่ถูกแสดงผลเพราะ fn1 ถูกแอดและถูกลบออกด้วย Function Reference ตัวเดียวกันเป๊ะ",
+          "D. '3' ไม่ถูกแสดงผลเพราะคำสั่ง removeEventListener เขียน Arrow Function หน้าตาเหมือนกันทุกตัวอักษรแล้ว",
+          "E. यदिต้องการลบ fn2 ออกในภายหลัง สามารถเรียก btn.removeEventListener('click', fn2) ได้สำเร็จเพราะเก็บ Reference ไว้ในตัวแปร fn2 แล้ว"
+        ],
+        correct: [0, 2, 4],
+        explanation: "อาจารย์เน้นมากใน Week 5: fn1 ถูกลบออกสำเร็จ (C ถูก) แต่ () => console.log('3') ที่เขียนสดใน addEventListener กับ removeEventListener เป็นคนละ Reference กัน จึงลบไม่ออก! ส่วน fn2 ถูกเก็บใส่ตัวแปรไว้จึงยังไม่ได้ถูกลบ ดังนั้นเมื่อคลิกจะแสดง '3' แล้วตามด้วย '2' ตามลำดับที่แอด (A ถูก, B และ D ผิด) และ fn2 สามารถลบผ่านตัวแปร fn2 ได้เพราะชี้ไปที่ Reference เดียวกัน (E ถูก)"
+      },
+      {
+        id: 5,
+        week: 5,
+        question: "กำหนดให้เราผูกเหตุการณ์ด้วยคำสั่ง:\nbox.addEventListener('click', handleBox, true);\nคำสั่งในข้อใดต่อไปนี้ที่สามารถลบ Event Listener ตัวนี้ออกได้สำเร็จ? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. box.removeEventListener('click', handleBox);",
+          "B. box.removeEventListener('click', handleBox, false);",
+          "C. box.removeEventListener('click', handleBox, true);",
+          "D. box.removeEventListener('click', () => handleBox(), true);",
+          "E. box.removeEventListener('click', handleBox, { capture: true });"
+        ],
+        correct: [2, 4],
+        explanation: "อาจารย์ย้ำในสไลด์หน้า removeEventListener ว่า ถ้าตอนแอดมีพารามิเตอร์ตัวที่ 3 (capture = true) ตอนสั่ง remove ก็ต้องระบุพารามิเตอร์ตัวที่ 3 ให้มีค่า capture เป็น true ตรงกันด้วย! หากไม่ใส่ (A) หรือใส่ false (B) ค่า capture จะเป็น false ทำให้ลบไม่ออก ส่วน D เป็นการสร้าง Arrow Function ใหม่คนละ Reference จึงลบไม่ออก ดังนั้นจึงถูกเฉพาะ C และ E"
+      },
+      {
+        id: 6,
+        week: 5,
+        question: "หากเราผูก Event Listener ชนิด 'click' จำนวน 3 ฟังก์ชันเข้ากับปุ่มเดียวกันด้วย addEventListener ข้อใดกล่าวถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ฟังก์ชันที่ถูกแอดเป็นลำดับสุดท้ายจะไปเขียนทับ (Overwrite) ฟังก์ชันแรกสุด ทำให้ทำงานแค่ฟังก์ชันสุดท้ายตัวเดียว",
+          "B. ทั้ง 3 ฟังก์ชันจะทำงานทั้งหมดเมื่อถูกคลิก โดยทำงานเรียงตามลำดับการแอดก่อน-หลัง",
+          "C. หากเราลบฟังก์ชันที่ 1 ออกด้วย removeEventListener ทันทีหลังแอด เมื่อคลิกปุ่มจะข้ามไปทำงานที่ฟังก์ชันที่ 2 และ 3",
+          "D. การใช้ Anonymous Function เช่น function() {} เขียนสดใน addEventListener จะไม่สามารถใช้ removeEventListener ลบออกได้",
+          "E. removeEventListener สามารถลบแฮนด์เลอร์ทั้งหมดออกพร้อมกันได้โดยส่งพารามิเตอร์แค่ชื่ออีเวนต์ตัวเดียว เช่น btn.removeEventListener('click')"
+        ],
+        correct: [1, 2, 3],
+        explanation: "A ผิด (นั่นคือการเขียนทับแบบ btn.onclick = ...) | B ถูก (ทำงานเรียงตามลำดับการแอด) | C ถูก (อาจารย์สาธิตการลบฟังก์ชันที่ 1 แล้วข้ามไปทำ 2 กับ 3) | D ถูก (Anonymous function ที่ไม่ได้เก็บใส่ตัวแปรจะไม่มี Reference ไปลบ) | E ผิด (removeEventListener บังคับต้องระบุทั้งชนิดอีเวนต์และตัวฟังก์ชัน Reference เสมอ)"
+      },
+      {
+        id: 7,
+        week: 6,
+        question: "พิจารณาโค้ดการดักจับคลิกที่ลิงก์ต่อไปนี้:\nconst link = document.querySelector('a#sitLink');\nlink.addEventListener('click', (e) => {\n  e.preventDefault();\n  console.log('Link was clicked!');\n});\nเมื่อผู้ใช้คลิกที่ลิงก์นี้ ข้อใดถูกต้องตามที่อาจารย์เน้นย้ำใน Week 6? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. เบราว์เซอร์จะไม่เปลี่ยนหน้าเว็บไปยัง URL ที่ระบุไว้ใน href ของแท็ก <a>",
+          "B. คำสั่ง console.log('Link was clicked!') จะไม่ทำงาน เพราะ e.preventDefault() สั่งยกเลิกการทำงานของ Event Listener ทั้งหมดทันที",
+          "C. คำสั่ง console.log('Link was clicked!') ยังคงทำงานและแสดงข้อความใน Console ตามปกติ",
+          "D. e.preventDefault() ทำหน้าที่ยกเลิกเฉพาะพฤติกรรมตั้งต้น (Default Behavior) ของเบราว์เซอร์ แต่ไม่ได้ยกเลิกการทำงานของโค้ดใน Listener ที่เราเขียน",
+          "E. พารามิเตอร์ e คือ Event Object ที่เบราว์เซอร์สร้างและส่งเข้ามาให้ฟังก์ชัน Event Handler โดยอัตโนมัติ"
+        ],
+        correct: [0, 2, 3, 4],
+        explanation: "นี่คือจุดที่อาจารย์ย้ำแล้วย้ำอีกใน Week 6 (นาทีที่ 2:33:37): นักศึกษาชอบสับสนคิดว่า preventDefault() จะหยุดโค้ดใน Listener ด้วย ซึ่งไม่จริง! มันยกเลิกแค่การวิ่งไปเปิดเว็บของแท็ก <a> (A ถูก) แต่โค้ด console.log ใน Listener ของเรายังต้องทำงานตามปกติ (B ผิด, C, D, E ถูก)"
+      },
+      {
+        id: 8,
+        week: 6,
+        question: "ในการทำระบบตรวจสอบข้อมูลในฟอร์ม (Form Validation) ก่อนส่งไปยังเซิร์ฟเวอร์ ข้อใดคือวิธีการผูก Event Listener ที่ถูกต้องตามที่อาจารย์สอนในห้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ดักที่แท็ก <form> โดยใช้ชนิดอีเวนต์เป็น 'submit' แล้วสั่ง event.preventDefault() ในฟังก์ชัน",
+          "B. ดักที่ปุ่ม <button> ในฟอร์ม โดยใช้ชนิดอีเวนต์เป็น 'click' แล้วสั่ง event.preventDefault() ในฟังก์ชัน",
+          "C. ดักที่ปุ่ม <button> โดยใช้ชนิดอีเวนต์เป็น 'submit' เช่น okBtn.addEventListener('submit', ...)",
+          "D. ดักที่แท็ก <form> โดยใช้ชนิดอีเวนต์เป็น 'click' เพื่อบล็อกการส่งฟอร์มทุกกรณี",
+          "E. หากไม่เรียกใช้ event.preventDefault() เมื่อกดปุ่มตกลงใน <form method=\"post\"> เบราว์เซอร์จะทำการส่ง Request ไปยังเซิร์ฟเวอร์และรีเฟรชหน้าเว็บทันที"
+        ],
+        correct: [0, 1, 4],
+        explanation: "อาจารย์เล่าเคสที่นักศึกษาทำผิดเมื่อวานให้ฟังในห้อง (นาทีที่ 2:40:13): นักศึกษาเอา 'submit' ไปใส่ที่ปุ่ม <button> (C ผิด!) และเอา 'click' ไปใส่ที่ <form> (D ผิด! เพราะคลิกพื้นที่ว่างในฟอร์มก็ลั่นทันที และกันการกดปุ่ม Enter ส่งฟอร์มไม่ได้) ที่ถูกต้องคือ: ถ้าดักที่ปุ่มให้ใช้ 'click' (B ถูก) หรือถ้าดักที่ฟอร์มให้ใช้ 'submit' (A ถูก) และต้องสั่ง preventDefault() เพื่อไม่ให้ฟอร์มวิ่งไปเรียกเซิร์ฟเวอร์เอง (E ถูก)"
+      },
+      {
+        id: 9,
+        week: 6,
+        question: "ในแบบฝึกหัด Practice 3 (Form Validation) ที่ให้ตรวจสอบ Username, Email, Password และ Confirm Password ข้อใดคือลอจิกการเขียนตรวจสอบฝั่ง Client ที่ถูกต้องและรัดกุม? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ค่าที่ได้จาก inputElement.value จะมีชนิดข้อมูลเป็น String เสมอ (หากผู้ใช้ไม่ได้กรอกอะไรเลย จะได้ค่าเป็น empty string \"\")",
+          "B. ควรใช้ .trim() ก่อนเช็คค่าว่าง เช่น usernameInput.value.trim() === '' เพื่อป้องกันผู้ใช้เคาะ Spacebar ล้วนๆ",
+          "C. การตรวจสอบรหัสผ่านตรงกัน สามารถเช็คด้วย passwordInput.value === confirmInput.value",
+          "D. การอ่านค่าที่ผู้ใช้พิมพ์ในช่อง <input type=\"text\"> ต้องเรียกผ่านพร็อพเพอร์ตี้ inputElement.textContent เท่านั้น",
+          "E. หากพบว่าข้อมูลไม่ถูกต้อง เราสามารถเปลี่ยนข้อความแจ้งเตือนและใช้ classList สลับสีข้อความระหว่างสีแดง (Error) กับสีเขียว (Success) ได้"
+        ],
+        correct: [0, 1, 2, 4],
+        explanation: "D ผิดอย่างแรง! เพราะแท็ก <input> เป็น Empty element ไม่มี textContent การดึงค่าที่ผู้ใช้กรอกในฟอร์มต้องอ่านผ่าน .value เท่านั้น ส่วนข้อ A, B, C, E ถูกต้องทั้งหมด"
+      },
+      {
+        id: 10,
+        week: 7,
+        question: "กำหนดโครงสร้าง HTML: <div id=\"outer\"><button id=\"inner\">Click Me</button></div> และรันโค้ด:\nouter.addEventListener('click', (e) => {\n  console.log(e.target.id, e.currentTarget.id);\n});\nเมื่อผู้ใช้คลิกที่ปุ่ม #inner ข้อใดกล่าวถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. e.target.id มีค่าเป็น \"inner\" เพราะปุ่ม #inner คือจุดกำเนิดที่ถูกคลิกจริงๆ",
+          "B. e.currentTarget.id มีค่าเป็น \"outer\" เพราะ Listener ตัวนี้ถูกผูกไว้กับ #outer",
+          "C. อีเวนต์นี้เดินทางจาก #inner ขึ้นไปยัง #outer ในเฟส Event Bubbling เพราะไม่ได้ระบุพารามิเตอร์ตัวที่ 3 (มีค่าปริยายเป็น false)",
+          "D. e.target.id และ e.currentTarget.id จะมีค่าเป็น \"outer\" เหมือนกันทั้งคู่",
+          "E. หากใน Listener ของ #inner มีการสั่ง e.stopPropagation() จะทำให้ Listener ของ #outer ไม่ถูกเรียกทำงานเลย"
+        ],
+        correct: [0, 1, 2, 4],
+        explanation: "เมื่อคลิกที่ #inner อีเวนต์จะ Bubble ขึ้นไปหา #outer (C ถูก) โดยในแฮนด์เลอร์ของ #outer นั้น e.target คือตัวที่ถูกคลิกจริง (#inner -> A ถูก) ส่วน e.currentTarget คือตัวที่ผูก addEventListener ไว้ (#outer -> B ถูก, D ผิด) และถ้าสั่ง stopPropagation() ที่ตัวลูก อีเวนต์จะหยุดไม่ไหลขึ้นไปหาตัวแม่ (E ถูก)"
+      },
+      {
+        id: 11,
+        week: 7,
+        question: "ถ้าเราผูก Event Listener ทั้งที่ <div id=\"parent\"> และ <button id=\"child\"> (ซึ่งอยู่ใน #parent) ดังนี้:\nparent.addEventListener('click', () => console.log('Parent Capture'), true);\nparent.addEventListener('click', () => console.log('Parent Bubble'), false);\nchild.addEventListener('click', () => console.log('Child Click'), false);\nเมื่อคลิกที่ปุ่ม #child 1 ครั้ง ลำดับข้อความใน Console และคำอธิบายข้อใดถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ลำดับที่แสดงคือ: Parent Capture -> Child Click -> Parent Bubble",
+          "B. ลำดับที่แสดงคือ: Child Click -> Parent Bubble -> Parent Capture",
+          "C. เฟส Capturing (พารามิเตอร์ตัวที่ 3 = true) จะทำงานวิ่งจากโหนดแม่ลงมายังโหนดลูกก่อนเสมอ",
+          "D. เฟส Bubbling (พารามิเตอร์ตัวที่ 3 = false) จะทำงานวิ่งย้อนจากโหนดลูกขึ้นไปหาโหนดแม่ทีหลัง",
+          "E. คำสั่ง event.preventDefault() สามารถใช้หยุดไม่ให้ 'Parent Bubble' ทำงานได้เหมือนกับ stopPropagation()"
+        ],
+        correct: [0, 2, 3],
+        explanation: "ตามวัฏจักร Event Flow: เฟส Capturing (true) จะวิ่งจากนอกเข้าในก่อน จึงพิมพ์ 'Parent Capture' อันดับแรก -> ถึงเป้าหมายพิมพ์ 'Child Click' -> แล้วค่อยไหลย้อนขึ้นในเฟส Bubbling (false) พิมพ์ 'Parent Bubble' (A, C, D ถูก | B ผิด) ส่วน E ผิด เพราะ preventDefault() ไม่ได้หยุดการไหลของ Event Flow (ต้องใช้ stopPropagation() เท่านั้น)"
+      },
+      {
+        id: 12,
+        week: 8,
+        question: "พิจารณาโค้ดในเมธอด CookieUtil.get('mode') ที่อาจารย์ไล่ถามทีละบรรทัดในห้องเรียน:\nสมมติว่า document.cookie มีค่าเป็น \"fontSize=14; mode=light; lang=th\"\nและกำหนดให้ let cookieName = `${encodeURIComponent('mode')}=`;\nข้อใดอธิบายการทำงานในแต่ละขั้นตอนได้ถูกต้องเป๊ะตามที่อาจารย์สอน? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ค่าของตัวแปร cookieName คือ \"mode=\" ซึ่งมีความยาว (cookieName.length) เท่ากับ 5",
+          "B. คำสั่ง document.cookie.split('; ') ต้องใช้เซมิโคลอนตามด้วยเว้นวรรค 1 เคาะ เพื่อแยกสตริงออกเป็น Array [\"fontSize=14\", \"mode=light\", \"lang=th\"]",
+          "C. เมธอด .find(c => c.startsWith(cookieName)) จะค้นหาจนเจอสตริง \"mode=light\" แล้วคืนค่าสตริงก้อนนั้นออกมา",
+          "D. คำสั่ง foundCookie.substring(cookieName.length) คือการสั่ง .substring(5) ซึ่งจะตัดสตริงตั้งแต่ Index ที่ 5 (ตัวอักษร 'l') เป็นต้นไป ได้ผลลัพธ์เป็น \"light\"",
+          "E. คำสั่ง foundCookie.substring(cookieName.length) จะคืนค่าออกมาเป็น \"=light\" เพราะนับเริ่มจากหมายเลข 1 ไม่ใช่ 0"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "อาจารย์ไล่ให้นับนิ้วในห้อง (Week 8 นาทีที่ 2:40:07): 'm'(0), 'o'(1), 'd'(2), 'e'(3), '='(4) มีความยาว length = 5 เมื่อสั่ง .substring(5) จึงเริ่มตัดที่ Index 5 ซึ่งคือตัว 'l' ของคำว่า 'light' พอดี! จึงได้คำว่า \"light\" ไม่ติดเครื่องหมายเท่ากับมาด้วย (A, B, C, D ถูก และ E ผิด)"
+      },
+      {
+        id: 13,
+        week: 8,
+        question: "ทำไมในเมธอด CookieUtil.unset(name) อาจารย์จึงเขียนโค้ดเป็น:\nCookieUtil.set(name, '', new Date(0));\nข้อใดคือเหตุผลและหลักการทำงานที่ถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. เพราะ document.cookie ไม่มีเมธอด .remove() หรือ .delete() มาให้ใช้งานโดยตรง",
+          "B. new Date(0) คือการส่งค่า 0 มิลลิวินาที ซึ่งหมายถึงวันที่ 1 มกราคม ค.ศ. 1970 (1 Jan 1970 UTC)",
+          "C. การกำหนดวันหมดอายุ (expires) ให้เป็นวันที่ในอดีต (ปี 1970) เป็นการบังคับให้คุกกี้ตัวนั้นหมดอายุและถูกลบออกจากเบราว์เซอร์ทันที",
+          "D. new Date(0) หมายถึงการตั้งเวลาให้คุกกี้หมดอายุในอีก 0 ชั่วโมงข้างหน้า (คือเที่ยงคืนของวันนี้)",
+          "E. ในเมธอด CookieUtil.set มีการใช้ encodeURIComponent ตอนบันทึก ดังนั้นตอนอ่านค่าใน CookieUtil.get จึงต้องใช้ decodeURIComponent คู่กันเสมอ"
+        ],
+        correct: [0, 1, 2, 4],
+        explanation: "อาจารย์ถามในห้อง (Week 8 นาทีที่ 2:35:57): การส่งเลข 0 เข้าไปใน new Date(0) คือ 0 milliseconds นับจากจุดเริ่มต้น Epoch Time ซึ่งก็คือวันที่ 1 มกราคม 1970 (เป็นอดีต) เพื่อให้คุกกี้หมดอายุและถูกลบทิ้งทันที (A, B, C, E ถูก ส่วน D ผิด)"
+      },
+      {
+        id: 14,
+        week: 8,
+        question: "สมมติว่าในเบราว์เซอร์มีคุกกี้อยู่แล้ว 1 ตัวคือ \"user=Athit\" หากเรารันคำสั่งต่อไปนี้เพิ่ม:\ndocument.cookie = \"theme=dark\";\nผลลัพธ์ในข้อใดถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. คุกกี้ \"user=Athit\" จะถูกลบทิ้งและถูกเขียนทับทั้งหมด เหลือเพียง \"theme=dark\" ตัวเดียว",
+          "B. คุกกี้ \"user=Athit\" ยังคงอยู่เหมือนเดิม และมีคุกกี้ \"theme=dark\" เพิ่มเข้ามาอีก 1 ตัว",
+          "C. เมื่อเรียกอ่านค่า document.cookie จะได้สตริงที่มีทั้งสองตัวคั่นด้วย '; ' เช่น \"user=Athit; theme=dark\"",
+          "D. เนื่องจากไม่ได้กำหนดวันหมดอายุ (expires หรือ max-age) ให้กับ \"theme=dark\" คุกกี้ตัวนี้จึงเป็น Session Cookie ที่จะหายไปเมื่อปิดเบราว์เซอร์",
+          "E. คุกกี้ทั้งสองตัวจะถูกแนบไปกับ HTTP Request Header ทุกครั้งที่เบราว์เซอร์ส่งคำขอไปยังเซิร์ฟเวอร์ของโดเมนนั้น"
+        ],
+        correct: [1, 2, 3, 4],
+        explanation: "จุดหลอกคลาสสิกของ document.cookie: แม้จะใช้เครื่องหมาย = เหมือนการกำหนดค่าทับตัวแปรทั่วไป แต่ setter ของ document.cookie จะเพิ่มหรืออัปเดตเฉพาะคุกกี้ตามชื่อคีย์ที่ระบุเท่านั้น ไม่ได้ลบคุกกี้ชื่ออื่นทิ้ง! (A ผิด, B, C, D, E ถูก)"
+      },
+      {
+        id: 15,
+        week: 9,
+        question: "ข้อใดเปรียบเทียบความแตกต่างระหว่าง localStorage และ sessionStorage ได้ถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ข้อมูลใน localStorage จะยังคงอยู่แม้ผู้ใช้จะปิดแท็บหรือปิดเบราว์เซอร์ไปแล้วก็ตาม",
+          "B. ข้อมูลใน sessionStorage จะหายไปทันทีเมื่อผู้ใช้กดปุ่ม Refresh (F5) ที่หน้าเว็บเดิม",
+          "C. ข้อมูลใน sessionStorage จะยังคงอยู่เมื่อกด Refresh หน้าเดิม แต่จะหายไปเมื่อปิดแท็บ (Tab) หรือปิดเบราว์เซอร์นั้น",
+          "D. หากเปิดเว็บเดียวกันขึ้นมา 2 แท็บพร้อมกัน ทั้งสองแท็บจะแชร์ข้อมูลใน localStorage ร่วมกันได้ แต่จะไม่แชร์ข้อมูลใน sessionStorage ข้ามแท็บกัน",
+          "E. ทั้ง localStorage และ sessionStorage จะไม่ถูกแนบส่งไปกับ HTTP Request ไปยังเซิร์ฟเวอร์โดยอัตโนมัติเหมือน Cookie"
+        ],
+        correct: [0, 2, 3, 4],
+        explanation: "B ผิด! เพราะการกด Refresh (Reload) แท็บเดิม Session ของแท็บนั้นยังไม่จบ ข้อมูลใน sessionStorage จึงยังอยู่ครบ จะหายก็ต่อเมื่อปิดแท็บหรือปิดหน้าต่างเบราว์เซอร์เท่านั้น (A, C, D, E ถูก)"
+      },
+      {
+        id: 16,
+        week: 9,
+        question: "พิจารณาโค้ดการเก็บข้อมูลลงใน localStorage ต่อไปนี้:\nconst setting = { dark: true, fontSize: 16 };\nlocalStorage.setItem('config', setting);\nconst result = localStorage.getItem('config');\nconst missing = localStorage.getItem('notExistKey');\nข้อใดกล่าวถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ตัวแปร result จะได้ค่ากลับมาเป็นออบเจ็กต์ { dark: true, fontSize: 16 } ที่เรียก result.dark ได้ทันที",
+          "B. ตัวแปร result จะได้ค่าเป็นสตริงคำว่า \"[object Object]\" เพราะไม่ได้ใช้ JSON.stringify() แปลงก่อนบันทึก",
+          "C. ตัวแปร missing จะได้ค่าเป็น null (ไม่ใช่ undefined)",
+          "D. วิธีที่ถูกต้องในการบันทึกและดึงออบเจ็กต์คือต้องใช้ JSON.stringify(setting) ตอน setItem และใช้ JSON.parse(...) ตอนดึงค่าจาก getItem",
+          "E. หากเรียกคำสั่ง localStorage.clear() จะเป็นการลบข้อมูลทุกคีย์ที่อยู่ใน localStorage ของ Origin นั้นออกทั้งหมด"
+        ],
+        correct: [1, 2, 3, 4],
+        explanation: "Web Storage เก็บข้อมูลได้เฉพาะ String เท่านั้น! ถ้ายัด Object เข้าไปตรงๆ มันจะเรียก .toString() กลายเป็น \"[object Object]\" (A ผิด, B ถูก) และเมื่อเรียก getItem ด้วยคีย์ที่ไม่มีอยู่จริง จะคืนค่าเป็น null เสมอ (C, D, E ถูก)"
+      },
+      {
+        id: 17,
+        week: 9,
+        question: "กำหนดให้มีการรันโค้ดต่อไปนี้บนหน้าเว็บที่เริ่มต้นด้วย localStorage ว่างเปล่า:\nlocalStorage.setItem('count', 10);\nconst val = localStorage.getItem('count');\nconst total = val + 5;\nข้อใดถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. ค่าของตัวแปร val คือตัวเลข 10 (ชนิด Number)",
+          "B. ค่าของตัวแปร val คือสตริง \"10\" (ชนิด String) เพราะ setItem แปลงค่าทุกอย่างเป็น String เสมอ",
+          "C. ค่าของตัวแปร total คือ \"105\" (เกิดการต่อสตริง String Concatenation ไม่ใช่การบวกเลขได้ 15)",
+          "D. หากต้องการบวกเลขให้ได้ 15 ต้องแปลงค่าด้วย Number(val) + 5 หรือ parseInt(val, 10) + 5",
+          "E. เราสามารถตรวจสอบจำนวนคีย์ทั้งหมดที่เก็บอยู่ใน localStorage ขณะนั้นได้ด้วยพร็อพเพอร์ตี้ localStorage.length"
+        ],
+        correct: [1, 2, 3, 4],
+        explanation: "อีกหนึ่งจุดหลอกยอดฮิต: แม้เราจะส่งตัวเลข 10 เข้าไปใน setItem('count', 10) แต่ Web Storage จะแปลงเป็น String \"10\" เสมอ! พอดึงออกมาด้วย getItem('count') แล้วนำมา + 5 จึงกลายเป็น \"10\" + 5 = \"105\" (A ผิด, B, C, D, E ถูก)"
+      },
+      {
+        id: 18,
+        week: 8,
+        question: "ข้อใดสรุปภาพรวมการเลือกใช้ Client-Side Storage และการจัดการ Event/DOM ทั้งหมดในครึ่งหลัง (Week 4–9) ได้ถูกต้อง? (เลือกทุกข้อที่ถูก)",
+        options: [
+          "A. การเก็บ Theme (Dark/Light Mode) หรือตั้งค่าหน้าเว็บของผู้ใช้ที่ต้องการให้คงอยู่ถาวรแม้ปิดเบราว์เซอร์ไปแล้ว เหมาะสมที่จะใช้ localStorage หรือ Cookie ที่ตั้งวันหมดอายุ (expires)",
+          "B. ข้อมูลชั่วคราวที่ใช้เฉพาะขั้นตอนการกรอกฟอร์มหลายหน้าในแท็บเดียว และต้องการให้หายไปทันทีเมื่อปิดแท็บ เหมาะสมที่จะใช้ sessionStorage",
+          "C. ในการลบคุกกี้ด้วย CookieUtil.unset(name) จำเป็นต้องระบุชื่อคุกกี้ให้ตรงกัน และหากตอนสร้างมีการระบุ path หรือ domain ตอนลบก็ต้องระบุให้ตรงกันด้วย",
+          "D. เมธอด classList.contains(), String.prototype.startsWith() และเปรียบเทียบ instanceof Date ต่างก็คืนค่ากลับมาเป็น Boolean (true/false)",
+          "E. ในการสอบควิซและไฟนอลของวิชานี้ ข้อสอบปรนัยแบบ Multiple Select หากมีข้อถูก 3 ตัวเลือก แต่เราเลือกถูกไปแค่ 2 ตัวเลือก จะได้คะแนนบางส่วน (Partial Credit)"
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: "A, B, C, D ถูกต้องทั้งหมด ส่วน E ผิด เพราะอาจารย์ย้ำชัดเจนว่าในข้อที่มีหลายคำตอบที่ถูกต้อง นักศึกษาต้องเลือกให้ครบทุกข้อที่ถูกเท่านั้น (100% Match) ถึงจะได้คะแนน!"
+      }
+    ];
+
+    // 3. STATE & INITIALIZATION
+    let currentWeek = 4;
+    let currentQuizFilter = 'all';
+    let userSelections = {}; // { questionId: Set of option indices }
+    let gradedResults = {};  // { questionId: boolean (isPerfect) }
+
+    function initApp() {
+      // Load saved theme
+      const savedTheme = localStorage.getItem('sit_study_theme') || 'dark';
+      setTheme(savedTheme);
+
+      renderWeekPills();
+      renderWeekContent(currentWeek);
+      runCookieVisualizer();
+      renderQuizFilters();
+      renderQuizQuestions();
+    }
+
+    // 4. THEME TOGGLE (Dark / Light)
+    function setTheme(mode) {
+      const htmlEl = document.documentElement;
+      const iconEl = document.getElementById('themeIcon');
+      const textEl = document.getElementById('themeText');
+      if (mode === 'dark') {
+        htmlEl.classList.add('dark');
+        iconEl.textContent = '🌙';
+        textEl.textContent = 'Dark Mode';
+      } else {
+        htmlEl.classList.remove('dark');
+        iconEl.textContent = '☀️';
+        textEl.textContent = 'Light Mode';
+      }
+      localStorage.setItem('sit_study_theme', mode);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(isDark ? 'light' : 'dark');
+    }
+
+    // 5. MAIN TAB NAVIGATION
+    function switchMainTab(tabName) {
+      ['study', 'lab', 'quiz'].forEach(t => {
+        const sec = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tabBtn-${t}`);
+        if (t === tabName) {
+          sec.classList.remove('hidden');
+          btn.className = "flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-semibold border-b-2 border-indigo-500 text-indigo-600 dark:text-indigo-400 whitespace-nowrap transition flex items-center justify-center gap-1.5";
+        } else {
+          sec.classList.add('hidden');
+          btn.className = "flex-1 sm:flex-none px-4 py-2.5 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-500 dark:text-slate-400 whitespace-nowrap transition flex items-center justify-center gap-1.5";
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 6. RENDER STUDY GUIDE (WEEK 4 - 9)
+    function renderWeekPills() {
+      const container = document.getElementById('weekPillsContainer');
+      container.innerHTML = weeksData.map(w => {
+        const active = w.week === currentWeek;
+        return `
+          <button onclick="selectWeek(${w.week})" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition flex items-center gap-2 border ${
+            active
+              ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20'
+              : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-indigo-400'
+          }">
+            <span>Week ${w.week}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full ${active ? 'bg-white/20 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'}">${w.badge}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectWeek(wk) {
+      currentWeek = wk;
+      renderWeekPills();
+      renderWeekContent(wk);
+    }
+
+    function renderWeekContent(wk) {
+      const data = weeksData.find(w => w.week === wk);
+      const container = document.getElementById('weekContentContainer');
+      if (!data) return;
+
+      const quotesHtml = data.teacherQuotes.map(q => `
+        <li class="flex items-start gap-2 text-xs sm:text-sm text-amber-900 dark:text-amber-200/90">
+          <span class="shrink-0 mt-0.5">🎙️</span>
+          <span>${q}</span>
+        </li>
+      `).join('');
+
+      const sectionsHtml = data.sections.map(sec => `
+        <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <h3 class="font-bold text-base sm:text-lg text-indigo-600 dark:text-indigo-400">${sec.heading}</h3>
+          <div class="text-xs sm:text-sm leading-relaxed text-slate-700 dark:text-slate-300">${sec.content}</div>
+          ${sec.code ? `<pre class="p-4 rounded-xl bg-slate-900 text-slate-100 text-xs overflow-x-auto leading-relaxed border border-slate-800"><code>${sec.code}</code></pre>` : ''}
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h2 class="font-bold text-base sm:text-xl text-slate-900 dark:text-white">${data.title}</h2>
+            <button onclick="jumpToWeekQuiz(${data.week})" class="text-xs font-semibold px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 transition shrink-0">
+              ทำควิซ Week ${data.week} →
+            </button>
+          </div>
+          <div class="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            คำพูดเน้นย้ำ & จุดหลอกที่อาจารย์พูดในห้องเรียน:
+          </div>
+          <ul class="space-y-1.5">${quotesHtml}</ul>
+        </div>
+        <div class="space-y-4">${sectionsHtml}</div>
+      `;
+    }
+
+    function jumpToWeekQuiz(wk) {
+      currentQuizFilter = wk;
+      switchMainTab('quiz');
+      renderQuizFilters();
+      renderQuizQuestions();
+    }
+
+    // 7. INTERACTIVE LAB FUNCTIONS
+    function lab1Action(mode) {
+      const box = document.getElementById('lab1Box');
+      const status = document.getElementById('lab1ClassStatus');
+      const borderClasses = ['border-4', 'border-indigo-500', 'ring-4', 'ring-indigo-500/20'];
+
+      if (mode === 'add') {
+        box.classList.add(...borderClasses);
+      } else if (mode === 'remove') {
+        box.classList.remove(...borderClasses);
+      } else if (mode === 'toggle') {
+        borderClasses.forEach(c => box.classList.toggle(c));
+      }
+
+      const activeCustom = borderClasses.filter(c => box.classList.contains(c));
+      status.textContent = `classList: [${activeCustom.map(c => `'${c}'`).join(', ')}] (length: ${activeCustom.length})`;
+    }
+
+    function lab2ChangeColor(event) {
+      const btn = event.currentTarget;
+      const colorName = btn.dataset.color;
+      const bgClass = btn.dataset.bg;
+      const box = document.getElementById('lab2Box');
+
+      box.classList.remove('bg-slate-700', 'bg-rose-600', 'bg-blue-600', 'bg-emerald-600');
+      box.classList.add(bgClass);
+      box.textContent = `BACKGROUND: ${colorName}`;
+    }
+
+    function lab3ValidateForm(event) {
+      event.preventDefault(); // ยกเลิกการส่งฟอร์มไปเซิร์ฟเวอร์ตามที่อาจารย์สอน
+      const u = document.getElementById('lab3User').value.trim();
+      const e = document.getElementById('lab3Email').value.trim();
+      const p = document.getElementById('lab3Pass').value.trim();
+      const c = document.getElementById('lab3Confirm').value.trim();
+      const msg = document.getElementById('lab3Msg');
+
+      msg.classList.remove('text-rose-500', 'text-emerald-500');
+
+      if (!u || !e || !p || !c) {
+        msg.textContent = '❌ Error: กรุณากรอกข้อมูลให้ครบทุกช่อง (ห้ามมีช่องใดว่าง!)';
+        msg.classList.add('text-rose-500');
+        return;
+      }
+      if (p !== c) {
+        msg.textContent = '❌ Error: Password และ Confirm Password ไม่ตรงกัน!';
+        msg.classList.add('text-rose-500');
+        return;
+      }
+      msg.textContent = `✅ Success: ข้อมูลครบถ้วนและรหัสผ่านตรงกัน! (ถูกดักไว้ด้วย event.preventDefault() หน้าเว็บจึงไม่รีเฟรช)`;
+      msg.classList.add('text-emerald-500');
+    }
+
+    function runCookieVisualizer() {
+      const raw = document.getElementById('lab4CookieRaw').value;
+      const key = document.getElementById('lab4Key').value;
+      const out = document.getElementById('lab4Output');
+
+      const cookieName = `${encodeURIComponent(key)}=`;
+      const arr = raw ? raw.split('; ') : [];
+      const found = arr.find(c => c.startsWith(cookieName));
+      const result = found ? decodeURIComponent(found.substring(cookieName.length)) : undefined;
+
+      out.innerHTML = `
+        <div><span class="text-slate-400">1. cookieName = </span><span class="text-amber-300">"${cookieName}"</span> <span class="text-slate-400">(length = ${cookieName.length})</span></div>
+        <div><span class="text-slate-400">2. split('; ') = </span><span class="text-indigo-300">${JSON.stringify(arr)}</span></div>
+        <div><span class="text-slate-400">3. find(startsWith) = </span><span class="text-purple-300">${found ? `"${found}"` : 'undefined'}</span></div>
+        <div><span class="text-slate-400">4. substring(${cookieName.length}) = </span><span class="font-bold ${result !== undefined ? 'text-emerald-400' : 'text-rose-400'}">${result !== undefined ? `"${result}"` : 'undefined (หาไม่เจอ)'}</span></div>
+      `;
+    }
+
+    // 8. HARDCORE QUIZ LOGIC (5 Options • 100% Exact Match Required)
+    function renderQuizFilters() {
+      const container = document.getElementById('quizFilterContainer');
+      const filters = [
+        { key: 'all', label: `ทั้งหมด (${quizQuestions.length} ข้อ)` },
+        { key: 4, label: 'Week 4 (DOM & classList)' },
+        { key: 5, label: 'Week 5 (removeEventListener)' },
+        { key: 6, label: 'Week 6 (preventDefault & Form)' },
+        { key: 7, label: 'Week 7 (Event Flow)' },
+        { key: 8, label: 'Week 8 (CookieUtil)' },
+        { key: 9, label: 'Week 9 (Web Storage)' }
+      ];
+
+      container.innerHTML = filters.map(f => {
+        const active = currentQuizFilter === f.key;
+        return `
+          <button onclick="setQuizFilter('${f.key}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition ${
+            active
+              ? 'bg-indigo-600 text-white'
+              : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+          }">
+            ${f.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setQuizFilter(filterKey) {
+      currentQuizFilter = filterKey === 'all' ? 'all' : Number(filterKey);
+      renderQuizFilters();
+      renderQuizQuestions();
+    }
+
+    function toggleOption(qId, optIdx) {
+      if (!userSelections[qId]) userSelections[qId] = new Set();
+      if (userSelections[qId].has(optIdx)) {
+        userSelections[qId].delete(optIdx);
+      } else {
+        userSelections[qId].add(optIdx);
+      }
+      // Clear graded state for this question when user changes selection
+      delete gradedResults[qId];
+      renderQuizQuestions();
+      updateScoreDisplay();
+    }
+
+    function isExactMatch(qId) {
+      const q = quizQuestions.find(item => item.id === qId);
+      const selected = userSelections[qId] || new Set();
+      if (selected.size !== q.correct.length) return false;
+      return q.correct.every(idx => selected.has(idx));
+    }
+
+    function gradeSingleQuestion(qId) {
+      gradedResults[qId] = isExactMatch(qId);
+      renderQuizQuestions();
+      updateScoreDisplay();
+    }
+
+    function gradeAllQuestions() {
+      quizQuestions.forEach(q => {
+        gradedResults[q.id] = isExactMatch(q.id);
+      });
+      renderQuizQuestions();
+      updateScoreDisplay();
+    }
+
+    function resetQuiz() {
+      userSelections = {};
+      gradedResults = {};
+      renderQuizQuestions();
+      updateScoreDisplay();
+    }
+
+    function updateScoreDisplay() {
+      const total = quizQuestions.length;
+      const score = quizQuestions.reduce((acc, q) => acc + (gradedResults[q.id] === true ? 1 : 0), 0);
+      document.getElementById('quizScoreDisplay').textContent = `${score} / ${total}`;
+    }
+
+    function renderQuizQuestions() {
+      const container = document.getElementById('quizQuestionsContainer');
+      const filtered = currentQuizFilter === 'all'
+        ? quizQuestions
+        : quizQuestions.filter(q => q.week === currentQuizFilter);
+
+      container.innerHTML = filtered.map((q, index) => {
+        const selectedSet = userSelections[q.id] || new Set();
+        const isGraded = gradedResults.hasOwnProperty(q.id);
+        const isPerfect = gradedResults[q.id] === true;
+
+        const optionsHtml = q.options.map((optText, optIdx) => {
+          const isChecked = selectedSet.has(optIdx);
+          const isCorrectOption = q.correct.includes(optIdx);
+
+          let rowStyle = "border-slate-200 dark:border-slate-800 hover:border-indigo-400 bg-slate-50/60 dark:bg-slate-800/40";
+          let statusBadge = "";
+
+          if (isChecked && !isGraded) {
+            rowStyle = "border-indigo-500 bg-indigo-500/10 dark:bg-indigo-500/20";
+          } else if (isGraded) {
+            if (isCorrectOption && isChecked) {
+              rowStyle = "border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/20";
+              statusBadge = `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500 text-white shrink-0">✓ เลือกถูก</span>`;
+            } else if (isCorrectOption && !isChecked) {
+              rowStyle = "border-amber-500 bg-amber-500/10 dark:bg-amber-500/20";
+              statusBadge = `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500 text-slate-950 shrink-0">! ลืมเลือกข้อนี้</span>`;
+            } else if (!isCorrectOption && isChecked) {
+              rowStyle = "border-rose-500 bg-rose-500/10 dark:bg-rose-500/20";
+              statusBadge = `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-rose-500 text-white shrink-0">✗ ตัวหลอก (ผิด)</span>`;
+            }
+          }
+
+          return `
+            <label onclick="toggleOption(${q.id}, ${optIdx})" class="cursor-pointer p-3 rounded-xl border ${rowStyle} transition flex items-start justify-between gap-3 select-none">
+              <div class="flex items-start gap-2.5">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation()" class="mt-1 w-4 h-4 rounded accent-indigo-600 pointer-events-none shrink-0" />
+                <span class="text-xs sm:text-sm leading-relaxed">${optText}</span>
+              </div>
+              ${statusBadge}
+            </label>
+          `;
+        }).join('');
+
+        return `
+          <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border ${
+            isGraded
+              ? (isPerfect ? 'border-emerald-500/70' : 'border-rose-500/70')
+              : 'border-slate-200 dark:border-slate-800'
+          } shadow-sm space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300">
+                ข้อที่ ${q.id} • Week ${q.week}
+              </span>
+              <span class="text-[11px] font-medium text-slate-400">
+                เลือกแล้ว ${selectedSet.size} ตัวเลือก (ต้องถูกครบ 100%)
+              </span>
+            </div>
+
+            <pre class="whitespace-pre-wrap font-sans font-semibold text-xs sm:text-sm leading-relaxed text-slate-900 dark:text-slate-100 bg-slate-100 dark:bg-slate-800/70 p-3.5 rounded-xl border border-slate-200/70 dark:border-slate-700/70">${q.question}</pre>
+
+            <div class="space-y-2">${optionsHtml}</div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <button onclick="gradeSingleQuestion(${q.id})" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
+                ตรวจคำตอบข้อนี้
+              </button>
+
+              ${
+                isGraded
+                  ? (isPerfect
+                      ? `<span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">🎉 ถูกต้อง 100% ได้ 1 คะแนนเต็ม!</span>`
+                      : `<span class="text-xs font-bold text-rose-600 dark:text-rose-400">❌ ได้ 0 คะแนน (ต้องเลือกข้อที่ถูกให้ครบทุกข้อและห้ามติดข้อผิด!)</span>`)
+                  : ''
+              }
+            </div>
+
+            ${
+              isGraded
+                ? `<div class="p-3.5 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-xs leading-relaxed space-y-1">
+                     <div class="font-bold text-indigo-600 dark:text-indigo-400">💡 เฉลยละเอียด & จุดหลอกของอาจารย์:</div>
+                     <p class="text-slate-700 dark:text-slate-300">${q.explanation}</p>
+                   </div>`
+                : ''
+            }
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Start App on DOM Ready
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
